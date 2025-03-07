@@ -41,7 +41,7 @@ function HeroSection() {
     <Card>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pt-4 pb-[50px]">
         {images
-          .filter((image) => image.id !== 7 && image.id !== 8) // Exclude specific images
+          .filter((image) => image.id !== 7 && image.id !== 8)
           .map((image, index) => (
             <div key={image.id} className="relative w-full">
               {/* Image */}
