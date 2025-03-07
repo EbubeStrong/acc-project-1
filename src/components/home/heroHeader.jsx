@@ -38,61 +38,25 @@ const HeroHeader = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  // const [formSubmitted, setFormSubmitted] = useState(false);
+  const [resetKey, setResetKey] = useState(0);
 
   const profilePic = images.find((image) => image.id === 7);
 
-  // function onSubmit(e) {
-  //   e.preventDefault();
-  //   setFormData(editedFormData);
-  //   localStorage.setItem("formData", JSON.stringify(editedFormData));
-  //   setIsDialogOpen(false);
-  //   setFormSubmitted(true);
-  // }
+  console.log("Resetting form:", editedFormData);
 
-  function onSubmit(e) {
-    e.preventDefault();
-    if (formData) {
-      setFormData(editedFormData); // Update the main form data
-      localStorage.setItem("formData", JSON.stringify(editedFormData));
-      setIsDialogOpen(false);
-      return
-    }
+  function onSubmit() {
+    setFormData(editedFormData);
+    localStorage.setItem("formData", JSON.stringify(editedFormData));
+    setIsDialogOpen(false);
+
+    // Reset form fields and force component re-render
     setEditedFormData({
       image: null,
       title: "",
       description: "",
     });
+    setResetKey((prevKey) => prevKey + 1);
   }
-
-  // function onSubmit(e) {
-  //   e.preventDefault();
-
-  //   console.log("Before update:", editedFormData);
-
-  //   setFormData(editedFormData);
-  //   localStorage.setItem("formData", JSON.stringify(editedFormData));
-
-  //   setTimeout(() => {
-  //     setIsDialogOpen(false);
-
-  //     console.log("Resetting editedFormData...");
-  //     setEditedFormData(initialFormData);
-
-  //     console.log("After reset:", editedFormData);
-  //   }, 100);
-  // }
-
-
-
-
-  // useEffect(() => {
-  //   if (!isDialogOpen && !formSubmitted) {
-  //     // Only reset the form if it was closed without saving
-  //     setEditedFormData(formData);
-  //   }
-  //   setFormSubmitted(false); // Reset formSubmitted state
-  // }, [isDialogOpen]);
 
   useEffect(() => {
     const savedFormData = JSON.parse(localStorage.getItem("formData"));
@@ -171,6 +135,7 @@ const HeroHeader = () => {
             Update your profile information below.
           </DialogDescription>
           <FormEditComponent
+            key={resetKey}
             formControls={imageForm}
             formData={editedFormData}
             setFormData={setEditedFormData}
@@ -181,7 +146,5 @@ const HeroHeader = () => {
     </div>
   );
 };
-
-
 
 export default HeroHeader;

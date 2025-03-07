@@ -11,7 +11,7 @@ export const imageForm = [
   {
     name: "image",
     label: "Image",
-    placeholder: "Upload Image",
+    placeholder: "Upload Image file",
     componentType: "input",
     type: "text",
   },

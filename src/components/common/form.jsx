@@ -60,10 +60,17 @@ function FormEditComponent({
 
   // const formRef = useRef();
 
+  const handleSubmit = (e) => {
+    e.preventDefault(); // Prevent page reload
+
+    onSubmit(); // Call the provided submit function
+
+    setFormData(""); // Reset form data after submission
+  };
 
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
     >
       <div className="flex flex-col gap-3">
         {Array.isArray(formControls) &&
