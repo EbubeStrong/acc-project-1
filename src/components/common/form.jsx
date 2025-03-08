@@ -20,7 +20,6 @@ function FormEditComponent({
             type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
-{/*             value={value} */}
             onChange={(e) =>
               setFormData({
                 ...formData,
