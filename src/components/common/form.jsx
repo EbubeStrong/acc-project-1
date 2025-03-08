@@ -1,89 +1,55 @@
+"use client";
+
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-// import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
-function FormEditComponent({
-  formControls = [],
-  formData,
-  setFormData,
-  onSubmit
-}) {
-  const renderInputsByComponentType = (getControlItem) => {
-    const value = formData[getControlItem.name] || "";
+function FormEditComponent({ formControls, formData, setFormData, onSubmit }) {
+  const formRef = useRef({
+    title: "",
+    description: "",
+    image: null,
+  });
 
-    switch (getControlItem.componentType) {
-      case "input":
-        return (
-          <Input
-            name={getControlItem.name}
-            type={getControlItem.type}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-            value={value}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: e.target.value,
-              })
-            }
-          />
-        );
-
-      case "textarea":
-        return (
-          <Textarea
-            name={getControlItem.name}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-            value={value}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: e.target.value,
-              })
-            }
-          />
-        );
-
-      default:
-        return (
-          <Input
-            name={getControlItem.name}
-            type={getControlItem.type}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-          />
-        );
-    }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // const formRef = useRef();
+  // Reset form when key changes (component remounts)
+  // useEffect(() => {
+  //   if (formRef.current) {
+  //     formRef.current.reset();
+  //   }
+  // }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent page reload
-
-    onSubmit(); // Call the provided submit function
-
-    setFormData(""); // Reset form data after submission
-  };
+  // function handleSubmit() {
+  //   if (onSubmit) {
+  //     setFormData("");
+  //   }
+  // }
 
   return (
-    <form
-      onSubmit={handleSubmit}
-    >
+    <form  onSubmit={onSubmit}>
       <div className="flex flex-col gap-3">
-        {Array.isArray(formControls) &&
-          formControls.map((controlItem) => (
-            <div className="grid w-full gap-1.5" key={controlItem.name}>
-              <label htmlFor={controlItem.name}>{controlItem.label}</label>
-              {renderInputsByComponentType(controlItem)}
-            </div>
-          ))}
+        {formControls.map((controlItem) => (
+          <div className="grid w-full gap-1.5" key={controlItem.name}>
+            <label htmlFor={controlItem.name}>{controlItem.label}</label>
+            <Input
+              name={controlItem.name}
+              type={controlItem.type}
+              placeholder={controlItem.placeholder}
+              id={controlItem.name}
+              defaultValue="" // Use defaultValue instead of value
+              // value={formData[controlItem.name] || setFormData("") || ""}
+              onChange={handleChange}
+            />
+          </div>
+        ))}
       </div>
 
       <Button type="submit" className="mt-6 w-full">
-        Edit
+        Save Changes
       </Button>
     </form>
   );
