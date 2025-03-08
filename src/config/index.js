@@ -10,10 +10,20 @@ import Logo from "../assets/Logo.png";
 export const imageForm = [
   {
     name: "image",
-    label: "Image",
-    placeholder: "Upload Image file",
+    label: "Image Url",
+    placeholder: "Upload Image url",
     componentType: "input",
     type: "text",
+  },
+  {
+    name: "textWriteUp",
+  },
+  {
+    name: "imageFile",
+    label: "Image File",
+    placeholder: "Upload Image file",
+    componentType: "input",
+    type: "file",
   },
   {
     name: "title",

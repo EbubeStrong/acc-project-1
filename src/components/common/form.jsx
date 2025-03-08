@@ -7,7 +7,8 @@ function FormEditComponent({
   formControls = [],
   formData,
   setFormData,
-  onSubmit
+  onSubmit,
+  onFileChange,
 }) {
   const renderInputsByComponentType = (getControlItem) => {
     const value = formData[getControlItem.name] || "";
@@ -20,39 +21,44 @@ function FormEditComponent({
             type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: e.target.value,
-              })
-            }
+            onChange={(e) => {
+              if (getControlItem.type === "file") {
+                onFileChange(e); // Call the file change handler
+              } else {
+                setFormData({
+                  ...formData,
+                  [getControlItem.name]: e.target.value,
+                });
+              }
+            }}
           />
         );
 
-      case "textarea":
-        return (
-          <Textarea
-            name={getControlItem.name}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-            value={value}
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                [getControlItem.name]: e.target.value,
-              })
-            }
-          />
-        );
+      // case "textarea":
+      //   return (
+      //     <Textarea
+      //       name={getControlItem.name}
+      //       placeholder={getControlItem.placeholder}
+      //       id={getControlItem.name}
+      //       value={value}
+      //       onChange={(e) =>
+      //         setFormData({
+      //           ...formData,
+      //           [getControlItem.name]: e.target.value,
+      //         })
+      //       }
+      //     />
+      //   );
 
       default:
         return (
-          <Input
-            name={getControlItem.name}
-            type={getControlItem.type}
-            placeholder={getControlItem.placeholder}
-            id={getControlItem.name}
-          />
+          // <Input
+          //   name={getControlItem.name}
+          //   type={getControlItem.type}
+          //   placeholder={getControlItem.placeholder}
+          //   id={getControlItem.name}
+          // />
+          <h1>Or Enter By Form FIle Below 👇</h1>
         );
     }
   };
@@ -68,9 +74,7 @@ function FormEditComponent({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-    >
+    <form onSubmit={handleSubmit}>
       <div className="flex flex-col gap-3">
         {Array.isArray(formControls) &&
           formControls.map((controlItem) => (
