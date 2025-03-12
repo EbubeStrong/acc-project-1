@@ -20,6 +20,7 @@ function ImageComponent() {
               </div>
               </div>  
             }
+            R
           />
           <Route path="*" element={<NotFound />} />
         </Route>

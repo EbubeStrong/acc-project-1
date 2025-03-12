@@ -10,6 +10,7 @@ import {
 } from "../../components/ui/dialog";
 import FormEditComponent from "../common/form";
 
+
 const initialFormData = (() => {
   try {
     return (
@@ -65,7 +66,6 @@ const HeroHeader = () => {
     setResetKey((prevKey) => prevKey + 1);
   }
 
-
   // const handleFileChange = (e) => {
   //   const file = e.target.files[0]; // Get the selected file
   //   if (file) {
@@ -102,8 +102,6 @@ const HeroHeader = () => {
     }
   };
 
-
-
   useEffect(() => {
     const savedFormData = JSON.parse(localStorage.getItem("formData"));
     if (savedFormData) {
@@ -111,21 +109,13 @@ const HeroHeader = () => {
     }
   }, []);
 
+  
+
   return (
     <div className="flex flex-col gap-5 sm:flex-row lg:flex-row justify-between items-center sm:items-end lg:items-end w-full py-4 border-b">
       <div className="flex flex-col lg:flex-row p-0">
         <div className="max-w-[250px]">
           {profilePic && (
-            // <img
-            //   src={
-            //     formData.image ||
-            //     (formData.imageFile
-            //       ? URL.createObjectURL(formData.imageFile)
-            //       : profilePic.img)
-            //   }
-            //   alt="profile pics"
-            //   style={{ marginTop: "12px", width: "100%", height: "200px" }}
-            // />
             <img
               src={
                 formData.image
