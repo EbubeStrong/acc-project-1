@@ -1,4 +1,4 @@
-import { images, imageForm } from "../../config/index";
+import { images, imageForm, postForm } from "../../config/index";
 import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { Pencil } from "lucide-react";
@@ -10,147 +10,92 @@ import {
 } from "../../components/ui/dialog";
 import FormEditComponent from "../common/form";
 
-const initialFormData = (() => {
-  try {
-    return (
-      JSON.parse(localStorage.getItem("editedFormData")) || {
-        image: null,
-        imageFile: null,
-        title: "",
-        description: "",
-      }
-    );
-  } catch (error) {
-    return {
-      image: null,
-      title: "",
-      description: "",
-    };
-  }
-})();
-
-const HeroHeader = () => {
-  const [formData, setFormData] = useState(() => {
-    const saved = localStorage.getItem("formData");
-    return saved ? JSON.parse(saved) : initialFormData;
-  });
-
-  const [editedFormData, setEditedFormData] = useState(formData);
+const HeroHeader = ({
+  formData,
+  setFormData,
+  editedFormData,
+  setEditedFormData,
+  onSubmit,
+  handleFileChange,
+  resetKey,
+  isDialogOpen,
+  setIsDialogOpen,
+  isPostDialogOpen,
+  setIsPostDialogOpen,
+  onAddSubmit,
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isButtonHovered, setIsButtonHovered] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
+  const [imagePreview, setImagePreview] = useState(null);
 
   const profilePic = images.find((image) => image.id === 7);
 
-  // console.log("Resetting form:", editedFormData);
+  useEffect(() => {
+    if (formData?.imageFile instanceof File) {
+      const objectUrl = URL.createObjectURL(formData.imageFile);
+      setImagePreview(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    } else if (formData?.imageFile && typeof formData.imageFile === 'string') {
+      // If imageFile is a base64 string, use it directly
+      setImagePreview(formData.imageFile);
+    }
+  }, [formData?.imageFile]);
 
-  function onSubmit() {
-    setFormData(editedFormData);
+  useEffect(() => {
+    try {
+      const savedFormData = JSON.parse(localStorage.getItem("formData"));
+      if (savedFormData) {
+        setFormData(savedFormData);
+      }
+    } catch (error) {
+      console.error("Error loading form data in HeroHeader", error);
+    }
+  }, [setFormData]);
 
-    // Store only non-file data in localStorage
-    const { imageFile, ...dataToSave } = editedFormData;
-    localStorage.setItem("formData", JSON.stringify(dataToSave));
+  const imageSrc = 
+    formData?.image || 
+    formData?.imageFile || 
+    imagePreview || 
+    profilePic?.img || 
+    "/default.png";
 
-    setIsDialogOpen(false);
-
-    // Reset form fields and force component re-render
-    setEditedFormData({
-      image: null,
-      imageFile: null,
-      title: "",
-      description: "",
-    });
-
-    setResetKey((prevKey) => prevKey + 1);
-  }
-
-
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0]; // Get the selected file
-  //   if (file) {
-  //     setEditedFormData((prev) => ({
-  //       ...prev,
-  //       imageFile: file, // Store actual File object
-  //     }));
-  //   }
-  // };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file); // Convert file to Base64
-
-      reader.onloadend = () => {
-        const base64String = reader.result; // Get Base64 string
-        setEditedFormData((prevData) => ({
-          ...prevData,
-          imageFile: base64String, // Store Base64 in state
-          image: base64String, // Use Base64 for preview
-        }));
-
-        // Save to localStorage for persistence
-        localStorage.setItem(
-          "formData",
-          JSON.stringify({
-            ...editedFormData,
-            imageFile: base64String, // Store Base64 in localStorage
-          })
-        );
-      };
+  // Submit handler for post
+  const handlePostSubmit = () => {
+    if (editedFormData) {
+      onAddSubmit(editedFormData);
     }
   };
 
-
-
-  useEffect(() => {
-    const savedFormData = JSON.parse(localStorage.getItem("formData"));
-    if (savedFormData) {
-      setFormData(savedFormData);
-    }
-  }, []);
-
   return (
-    <div className="flex flex-col gap-5 sm:flex-row lg:flex-row justify-between items-center sm:items-end lg:items-end w-full py-4 border-b">
-      <div className="flex flex-col lg:flex-row p-0">
-        <div className="max-w-[250px]">
+    <div className="flex flex-col gap-5 sm:flex-row lg:flex-row justify-between items-center sm:items-end lg:items-end w-full py-4 mb-5 border-b sticky top-0 bg-amber-50 z-10">
+      <div
+        className="flex lg:gap-0 gap-3 md:flex-row sm:flex-col lg:flex-row p-0 w-full max-w-[450px]"
+        // style={{border: "2px solid green"}}
+      >
+        <div className="w-full max-w-[250px]">
           {profilePic && (
-            // <img
-            //   src={
-            //     formData.image ||
-            //     (formData.imageFile
-            //       ? URL.createObjectURL(formData.imageFile)
-            //       : profilePic.img)
-            //   }
-            //   alt="profile pics"
-            //   style={{ marginTop: "12px", width: "100%", height: "200px" }}
-            // />
             <img
-              src={
-                formData.image
-                  ? formData.image
-                  : formData.imageFile instanceof File
-                  ? URL.createObjectURL(formData.imageFile)
-                  : profilePic.img
-              }
-              alt="profile pics"
-              style={{ marginTop: "12px", width: "100%", height: "200px" }}
+              src={imageSrc}
+              alt="profile pic"
+              style={{ marginTop: "12px", width: "100%", height: "310px" }}
+              className="object-fill"
             />
           )}
         </div>
 
-        <div className="flex flex-col items-center lg:items-start justify-between ml-0 lg:ml-5 p-0 mt-0">
+        <div className="flex flex-col items-start justify-between ml-0 lg:ml-5 p-0 mt-0">
           <div className="flex flex-col items-center justify-center lg:items-start">
-            <h1 className="text-[32px] py-0">
-              {formData.title || "Bessie Coleman"}
+            <h1 className="text-[32px] py-0 ">
+              {formData?.title || "Bessie Coleman"}
             </h1>
-            <p className="mt-1">{formData.description || "Civil Aviator"}</p>
+            <p className="mt-1 mx-0 px-0 w-full">
+              {formData?.description || "Civil Aviator"}
+            </p>
           </div>
 
           <div>
             <Button
-              className="flex items-end"
+              className="flex items-end transition-all"
               style={{
                 backgroundColor: "transparent",
                 boxShadow: "none",
@@ -158,12 +103,11 @@ const HeroHeader = () => {
                 color: isHovered
                   ? "rgba(33, 33, 33, 1)"
                   : "rgba(33, 33, 33, 0.8)",
-                transition: "background-color 0.3s ease-in-out",
               }}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}
               onClick={() => {
-                setEditedFormData(formData); // Load existing data into form
+                setEditedFormData({ ...formData });
                 setIsDialogOpen(true);
               }}
             >
@@ -176,15 +120,18 @@ const HeroHeader = () => {
 
       <div>
         <Button
-          className="w-[300px] lg:w-full sm:w-full"
+          className="w-[300px] lg:w-full sm:w-full transition-all"
           style={{
             backgroundColor: isButtonHovered
               ? "rgba(33, 33, 33, 0.8)"
               : "rgba(33, 33, 33, 1)",
-            transition: "background-color 0.3s ease-in-out",
           }}
           onMouseEnter={() => setIsButtonHovered(true)}
           onMouseLeave={() => setIsButtonHovered(false)}
+          onClick={() => {
+            setEditedFormData({ title: "", description: "", image: "" });
+            setIsPostDialogOpen(true);
+          }}
         >
           + New Post
         </Button>
@@ -192,7 +139,7 @@ const HeroHeader = () => {
 
       <Dialog
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        onOpenChange={(open) => setIsDialogOpen(open)}
         className="max-w-lg md:max-w-md sm:max-w-sm"
       >
         <DialogContent>
@@ -201,12 +148,33 @@ const HeroHeader = () => {
             Update your profile information below.
           </DialogDescription>
           <FormEditComponent
-            key={resetKey}
+            key={`profile-edit-${resetKey}`}
             formControls={imageForm}
             formData={editedFormData}
             setFormData={setEditedFormData}
             onSubmit={onSubmit}
             onFileChange={handleFileChange}
+            buttonText="Save Changes"
+          />
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={isPostDialogOpen}
+        onOpenChange={(open) => setIsPostDialogOpen(open)}
+        className="max-w-lg md:max-w-md sm:max-w-sm"
+      >
+        <DialogContent>
+          <DialogTitle>Add Post</DialogTitle>
+          <DialogDescription>Add new post below.</DialogDescription>
+          <FormEditComponent
+            key={`post-add-${resetKey}`}
+            formControls={postForm}
+            formData={editedFormData}
+            setFormData={setEditedFormData}
+            onSubmit={handlePostSubmit}
+            onFileChange={handleFileChange}
+            buttonText="Add Post"
           />
         </DialogContent>
       </Dialog>

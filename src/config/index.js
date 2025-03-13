@@ -41,6 +41,35 @@ export const imageForm = [
   },
 ];
 
+
+export const postForm = [
+  {
+    name: "image",
+    label: "Image Url",
+    placeholder: "Upload Image url",
+    componentType: "input",
+    type: "text",
+  },
+  {
+    name: "textWriteUp",
+  },
+  {
+    name: "imageFile",
+    label: "Image File",
+    placeholder: "Upload Image file",
+    componentType: "input",
+    type: "file",
+  },
+  {
+    name: "title",
+    label: "Text",
+    placeholder: "Enter title",
+    componentType: "input",
+    type: "text",
+  },
+];
+
+
 export const images = [
   {
     id: 1,

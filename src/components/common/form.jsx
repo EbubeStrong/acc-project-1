@@ -1,7 +1,6 @@
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
-// import { useRef } from "react";
 
 function FormEditComponent({
   formControls = [],
@@ -9,9 +8,13 @@ function FormEditComponent({
   setFormData,
   onSubmit,
   onFileChange,
+  buttonText,
 }) {
   const renderInputsByComponentType = (getControlItem) => {
-    const value = formData[getControlItem.name] || "";
+    const value =
+      formData && formData[getControlItem.name]
+        ? formData[getControlItem.name]
+        : "";
 
     switch (getControlItem.componentType) {
       case "input":
@@ -21,6 +24,7 @@ function FormEditComponent({
             type={getControlItem.type}
             placeholder={getControlItem.placeholder}
             id={getControlItem.name}
+            // value={getControlItem.type !== "file" ? value : ""}
             onChange={(e) => {
               if (getControlItem.type === "file") {
                 onFileChange(e); // Call the file change handler
@@ -34,43 +38,34 @@ function FormEditComponent({
           />
         );
 
-      // case "textarea":
-      //   return (
-      //     <Textarea
-      //       name={getControlItem.name}
-      //       placeholder={getControlItem.placeholder}
-      //       id={getControlItem.name}
-      //       value={value}
-      //       onChange={(e) =>
-      //         setFormData({
-      //           ...formData,
-      //           [getControlItem.name]: e.target.value,
-      //         })
-      //       }
-      //     />
-      //   );
+      case "textarea":
+        return (
+          <Textarea
+            name={getControlItem.name}
+            placeholder={getControlItem.placeholder}
+            id={getControlItem.name}
+            value={value}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                [getControlItem.name]: e.target.value,
+              })
+            }
+          />
+        );
 
       default:
-        return (
-          // <Input
-          //   name={getControlItem.name}
-          //   type={getControlItem.type}
-          //   placeholder={getControlItem.placeholder}
-          //   id={getControlItem.name}
-          // />
-          <h1>Or Enter By Form FIle Below 👇</h1>
-        );
+        return <h1>Or Enter By Form File Below 👇</h1>;
     }
   };
-
-  // const formRef = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent page reload
 
-    onSubmit(); // Call the provided submit function
+    // Call the provided submit function
+    onSubmit(formData);
 
-    setFormData(""); // Reset form data after submission
+    // Note: Don't reset the form data here, as it's handled in the parent component
   };
 
   return (
@@ -86,7 +81,7 @@ function FormEditComponent({
       </div>
 
       <Button type="submit" className="mt-6 w-full">
-        Edit
+        {buttonText || "Submit"}
       </Button>
     </form>
   );
