@@ -67,10 +67,10 @@ const HeroHeader = ({
   };
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row lg:flex-row justify-between items-center sm:items-end lg:items-end w-full py-4 mb-5 border-b sticky top-0 bg-amber-50 z-10">
+    <div className="flex flex-col gap-5 md:flex-row lg:flex-row justify-between items-center md:items-end lg:items-end w-full py-4 mb-5 border-b sticky top-0 bg-amber-50 z-10">
       <div
-        className="flex lg:gap-0 gap-3 md:flex-row sm:flex-col lg:flex-row p-0 w-full max-w-[450px]"
-        // style={{border: "2px solid green"}}
+        className="flex flex-col items-center md:items-stretch lg:gap-0 gap-3 md:flex-row sm:flex-col lg:flex-row p-0 w-full max-w-[450px]"
+        // style={{ border: "2px solid green" }}
       >
         <div className="w-full max-w-[250px]">
           {profilePic && (
@@ -83,12 +83,18 @@ const HeroHeader = ({
           )}
         </div>
 
-        <div className="flex flex-col items-start justify-between ml-0 lg:ml-5 p-0 mt-0">
+        <div
+          className="flex flex-col  items-center sm:items-start justify-between ml-0 lg:ml-5 p-0 mt-0"
+          // style={{ border: "2px solid red" }}
+        >
           <div className="flex flex-col items-center justify-center lg:items-start">
             <h1 className="text-[32px] py-0 ">
               {formData?.title || "Bessie Coleman"}
             </h1>
-            <p className="mt-1 mx-0 px-0 w-full">
+            <p
+              className="mt-1 mx-0 text-center md:text-left px-0 w-full"
+              // style={{ border: "2px solid green" }}
+            >
               {formData?.description || "Civil Aviator"}
             </p>
           </div>
@@ -120,7 +126,7 @@ const HeroHeader = ({
 
       <div>
         <Button
-          className="w-[300px] lg:w-full sm:w-full transition-all"
+          className="w-[300px] lg:w-full md:w-full transition-all"
           style={{
             backgroundColor: isButtonHovered
               ? "rgba(33, 33, 33, 0.8)"
