@@ -56,7 +56,7 @@ function HeroSection({ formData, setFormData }) {
     <Card>
       <div
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 pt-4 pb-[50px] 
-     h-[90vh] overflow-y-auto"
+     h-[100vh] overflow-y-auto"
       >
         {validFormData.map((item, index) => (
           <div key={item.id || `user-${index}`} className="relative w-full">

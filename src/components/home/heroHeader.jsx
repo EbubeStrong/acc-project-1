@@ -67,7 +67,7 @@ const HeroHeader = ({
   };
 
   return (
-    <div className="flex flex-col gap-5 md:flex-row lg:flex-row justify-between items-center md:items-end lg:items-end w-full py-4 mb-5 border-b sticky top-0 bg-amber-50 z-10">
+    <div className="flex flex-col gap-5 md:flex-row lg:flex-row justify-between items-center md:items-end lg:items-end w-full py-4 mb-5 border-b bg-amber-50 z-10">
       <div
         className="flex flex-col items-center md:items-stretch lg:gap-0 gap-3 md:flex-row sm:flex-col lg:flex-row p-0 w-full max-w-[450px]"
         // style={{ border: "2px solid green" }}
